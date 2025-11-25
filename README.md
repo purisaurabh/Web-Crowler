@@ -1,12 +1,70 @@
-# Web-Crowler
-We're going to write a Golang CLI application that generates an "internal links" report for any website on the internet by crawling each page of the site.
+# Web Crawler
 
-In this project, we'll build a Web Crawler in Golang! To rank well in Google Search, websites need to internally link pages one to another. For example, a blog post about the benefits of haircuts should probably link to my post about the best places to get haircuts.
+A Golang CLI application that crawls a website and generates an internal links report.
 
-# Setup
-Before we dive into the project, let's make sure you are all set up properly. You will need:
+## Features
+-   **Concurrent Crawling**: Uses Goroutines to crawl pages in parallel.
+-   **Robots.txt Support**: Respects `robots.txt` rules (User-agent: *).
+-   **Rate Limiting**: Configurable delay between requests to avoid overwhelming servers.
+-   **JSON Output**: Option to export report in JSON format.
+-   **File Output**: Save report to a specific file.
+-   **Rich Page Data**: Extracts comprehensive metadata including:
+    -   Title, Description, Keywords, Author
+    -   Canonical URL, Language, Charset
+    -   Open Graph data (image, type, URL, site name)
+    -   Twitter Card data (card type, site, image)
+-   **Configurable User-Agent**: Set custom User-Agent string.
+-   **AI-Powered Analysis**: Get AI-generated suggestions for SEO, content quality, accessibility, and performance improvements.
+-   **Environment Variables**: Load API keys from `.env` file for security.
 
-All instructions will assume a bash-like/unix-like environment. I recommend WSL 2 if you're on Windows so that you can... not be.
-The latest Go toolchain installed.
-If you're in VS Code, I recommend installing the Go extension. It's not required, but it makes working with Go a lot easier.
-You will need the Boot.dev CLI installed, and you'll need to be logged in.
+## Setup
+
+1.  **Clone the repository**
+2.  **Create a `.env` file** (optional, for AI analysis):
+    ```bash
+    cp .env.example .env
+    # Edit .env and add your API key
+    ```
+
+## Usage
+
+```bash
+go run cmd/crawler/main.go -url <baseURL> [flags]
+```
+
+### Flags
+-   `-url`: Base URL to crawl (required).
+-   `-concurrency`: Maximum number of concurrent requests (default 10).
+-   `-pages`: Maximum number of pages to crawl (default 100).
+-   `-json`: Output report in JSON format (default false).
+-   `-out`: Output file path (optional).
+-   `-user-agent`: User-Agent string to use (default "Crawler").
+-   `-delay`: Delay between requests (default 500ms).
+-   `-analyze`: Enable AI-powered analysis (requires API key in .env file).
+-   `-ai-provider`: AI provider to use: openai/gemini/anthropic (default "openai").
+
+### Examples
+
+**Basic Crawl:**
+```bash
+go run cmd/crawler/main.go -url https://wagslane.dev
+```
+
+**Save to JSON File:**
+```bash
+go run cmd/crawler/main.go -url https://wagslane.dev -json -out report.json
+```
+
+**AI-Powered Analysis:**
+```bash
+go run cmd/crawler/main.go -url https://cadicient.com -json -analyze -api-key YOUR_OPENAI_API_KEY -out analysis.json
+```
+
+**Custom Configuration:**
+```bash
+go run cmd/crawler/main.go -url https://wagslane.dev -concurrency 20 -pages 50 -delay 100ms -user-agent "MyBot"
+```
+
+## Project Structure
+-   `cmd/crawler`: Entry point of the application.
+-   `internal/crawler`: Core logic (crawler, configuration, robots.txt, etc.).

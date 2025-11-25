@@ -1,4 +1,4 @@
-package main
+package crawler
 
 import (
 	"fmt"
@@ -7,8 +7,14 @@ import (
 	"strings"
 )
 
-func getHTML(rawURL string) (string, error) {
-	res, err := http.Get(rawURL)
+func (cfg *Config) getHTML(rawURL string) (string, error) {
+	req, err := http.NewRequest("GET", rawURL, nil)
+	if err != nil {
+		return "", fmt.Errorf("got Network error: %v", err)
+	}
+	req.Header.Set("User-Agent", cfg.UserAgent)
+
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("got Network error: %v", err)
 	}

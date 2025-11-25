@@ -1,4 +1,4 @@
-package main
+package crawler
 
 import (
 	"reflect"
@@ -8,17 +8,17 @@ import (
 func TestSortPages(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    map[string]int
+		input    map[string]*PageData
 		expected []Page
 	}{
 		{
 			name: "order count descending",
-			input: map[string]int{
-				"url1": 5,
-				"url2": 1,
-				"url3": 3,
-				"url4": 10,
-				"url5": 7,
+			input: map[string]*PageData{
+				"url1": {LinkCount: 5},
+				"url2": {LinkCount: 1},
+				"url3": {LinkCount: 3},
+				"url4": {LinkCount: 10},
+				"url5": {LinkCount: 7},
 			},
 			expected: []Page{
 				{URL: "url4", Count: 10},
@@ -30,12 +30,12 @@ func TestSortPages(t *testing.T) {
 		},
 		{
 			name: "alphabetize",
-			input: map[string]int{
-				"d": 1,
-				"a": 1,
-				"e": 1,
-				"b": 1,
-				"c": 1,
+			input: map[string]*PageData{
+				"d": {LinkCount: 1},
+				"a": {LinkCount: 1},
+				"e": {LinkCount: 1},
+				"b": {LinkCount: 1},
+				"c": {LinkCount: 1},
 			},
 			expected: []Page{
 				{URL: "a", Count: 1},
@@ -47,12 +47,12 @@ func TestSortPages(t *testing.T) {
 		},
 		{
 			name: "order count then alphabetize",
-			input: map[string]int{
-				"d": 2,
-				"a": 1,
-				"e": 3,
-				"b": 1,
-				"c": 2,
+			input: map[string]*PageData{
+				"d": {LinkCount: 2},
+				"a": {LinkCount: 1},
+				"e": {LinkCount: 3},
+				"b": {LinkCount: 1},
+				"c": {LinkCount: 2},
 			},
 			expected: []Page{
 				{URL: "e", Count: 3},
@@ -64,7 +64,7 @@ func TestSortPages(t *testing.T) {
 		},
 		{
 			name:     "empty map",
-			input:    map[string]int{},
+			input:    map[string]*PageData{},
 			expected: []Page{},
 		},
 		{
@@ -74,8 +74,8 @@ func TestSortPages(t *testing.T) {
 		},
 		{
 			name: "one key",
-			input: map[string]int{
-				"url1": 1,
+			input: map[string]*PageData{
+				"url1": {LinkCount: 1},
 			},
 			expected: []Page{
 				{URL: "url1", Count: 1},
